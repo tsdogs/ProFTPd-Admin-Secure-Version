@@ -340,7 +340,7 @@ class AdminClass {
                                   $userdata[$field_comment],
                                   $userdata[$field_disabled],
                                   date('Y-m-d H:i:s'),
-                                  $userdata[$expiration]);
+                                  $userdata[$field_expiration]);
         $result = $this->dbConn->query($query);
         return $result;
     }

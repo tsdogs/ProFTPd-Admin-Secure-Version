@@ -260,7 +260,7 @@
 				// No existing connection at this point means the server is unreachable
 				if ( ! isset($this->dbh) || ! $this->dbh || $this->dbh->connect_errno )
 					return false;
-			}
+            }
 
 			// Perform the query via std mysql_query function..
 			$this->result = @$this->dbh->query($query);
