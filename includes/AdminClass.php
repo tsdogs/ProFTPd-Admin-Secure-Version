@@ -55,7 +55,7 @@ class AdminClass {
      * @access private
      * @var String
      */
-    var $version = "2.2";
+    var $version = "2.3";
 
     /**
      * initialize the database connection via ezSQL_mysql
@@ -284,6 +284,7 @@ class AdminClass {
         $field_uid           = $this->config['field_uid'];
         $field_ugid          = $this->config['field_ugid'];
         $field_passwd        = $this->config['field_passwd'];
+        $field_salt          = $this->config['field_salt'];
         $field_homedir       = $this->config['field_homedir'];
         $field_shell         = $this->config['field_shell'];
         $field_sshpubkey     = $this->config['field_sshpubkey'];
@@ -302,19 +303,22 @@ class AdminClass {
           $passwd = '"'.$passwd.'"';
         } else if ($passwd_encryption == 'crypt') {
           $passwd = unix_crypt($userdata[$field_passwd]);
-          $passwd = '"'.$passwd.'"';
         } else if (strpos($passwd_encryption, "OpenSSL:") === 0) {
           $passwd_digest = substr($passwd_encryption, strpos($passwd_encryption, ':')+1);
           $passwd = 'CONCAT("{'.$passwd_digest.'}",TO_BASE64(UNHEX('.$passwd_digest.'("'.$userdata[$field_passwd].'"))))';
         } else {
           $passwd = $passwd_encryption.'("'.$userdata[$field_passwd].'")';
         }
-        $format = 'INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) VALUES ("%s","%s","%s",%s,"%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s")';
+        if ($userdata['expiration']=='') {
+            $userdata['expiration']='2099-12-31 00:00:00';
+        }
+        $format = 'INSERT INTO %s (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) VALUES ("%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s","%s")';
         $query = sprintf($format, $this->config['table_users'],
                                   $field_userid,
                                   $field_uid,
                                   $field_ugid,
                                   $field_passwd,
+                                  $field_salt,
                                   $field_homedir,
                                   $field_shell,
                                   $field_sshpubkey,
@@ -330,6 +334,7 @@ class AdminClass {
                                   $userdata[$field_uid],
                                   $userdata[$field_ugid],
                                   $passwd,
+                                  isset($userdata[$field_salt])?str_replace('"','\"',$userdata[$field_salt]):"", // salt
                                   $userdata[$field_homedir],
                                   $userdata[$field_shell],
                                   addslashes($userdata[$field_sshpubkey]),
@@ -573,6 +578,7 @@ class AdminClass {
         $field_uid           = $this->config['field_uid'];
         $field_ugid          = $this->config['field_ugid'];
         $field_passwd        = $this->config['field_passwd'];
+        $field_salt          = $this->config['field_salt'];
         $field_homedir       = $this->config['field_homedir'];
         $field_shell         = $this->config['field_shell'];
         $field_sshpubkey     = $this->config['field_sshpubkey'];
@@ -595,6 +601,7 @@ class AdminClass {
           } else if ($passwd_encryption == 'crypt') {
             $passwd = unix_crypt($userdata[$field_passwd]);
             $passwd_format = ' %s="%s", ';
+            $passwd_query = sprintf(' %s="%s", ',$field_salt, "");
           } else if (strpos($passwd_encryption, "OpenSSL:") === 0) {
             $passwd_digest = substr($passwd_encryption, strpos($passwd_encryption, ':')+1);
             $passwd = 'CONCAT("{'.$passwd_digest.'}",TO_BASE64(UNHEX('.$passwd_digest.'("'.$userdata[$field_passwd].'"))))';
@@ -603,7 +610,7 @@ class AdminClass {
             $passwd = $passwd_encryption.'("'.$userdata[$field_passwd].'")';
             $passwd_format = ' %s=%s, ';
           }
-          $passwd_query = sprintf($passwd_format, $field_passwd, $passwd);
+          $passwd_query .= sprintf($passwd_format, $field_passwd, $passwd);
         }
 
         $format = 'UPDATE %s SET %s %s="%s", %s="%s", %s="%s", %s="%s", %s="%s", %s="%s", %s="%s", %s="%s", %s="%s", %s="%s", %s="%s", %s="%s", %s="%s", %s="%s" WHERE %s="%s"';

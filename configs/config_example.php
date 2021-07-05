@@ -68,10 +68,12 @@ $cfg['field_gid'] = "gid";
 $cfg['field_members'] = "members";
 
 $cfg['default_uid'] = "1000"; //if empty next incremental will be default
-$cfg['default_homedir'] = "/srv/ftp";
+$cfg['default_homedir'] = "/srv/ftp/%U"; // %U will be replaced with userid
+$cfg['default_shell'] = '/bin/bash'; // if empty default is /bin/false
+
 // Use either SHA1 or MD5 or any other supported by your MySQL-Server and ProFTPd
 // "pbkdf2" is supported if you are using ProFTPd 1.3.5.
-// "crypt" uses the unix crypt() function.
+// "crypt" uses the unix crypt() function. which uses the PHP hash function
 // "OpenSSL:sha1" other digest-names also possible; see: http://www.proftpd.org/docs/directives/configuration_full.html#SQLAUTHTYPES
 $cfg['passwd_encryption'] = "crypt";
 $cfg['min_passwd_length'] = "8";

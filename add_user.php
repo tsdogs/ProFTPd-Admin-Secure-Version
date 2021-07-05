@@ -119,6 +119,9 @@ if (empty($errormsg) && !empty($_REQUEST["action"]) && $_REQUEST["action"] == "c
                       $field_expiration => $_REQUEST[$field_expiration],
                       $field_disabled   => $disabled);
 
+    /* change %u into the user name */
+    $userdata[$field_homedir] = str_ireplace('%u',$userdata[$field_userid],$userdata[$field_homedir]);
+
     if ($ac->add_user($userdata)) {
       if (isset($_REQUEST[$field_ad_gid])) {
         while (list($g_key, $g_gid) = each($_REQUEST[$field_ad_gid])) {
@@ -169,7 +172,11 @@ if (isset($errormsg)) {
   if (empty($infomsg)) {
     $ugid   = "";
     $ad_gid = array();
-    $shell  = "/bin/false";
+    if (empty($cfg['default_shell'])) {
+        $shell  = "/bin/false";
+    } else {
+        $shell = $cfg['default_shell'];
+    }
   } else {
     $ugid    = $_REQUEST[$field_ugid];
     $ad_gid = $_REQUEST[$field_ad_gid];
