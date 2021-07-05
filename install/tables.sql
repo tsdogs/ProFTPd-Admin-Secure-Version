@@ -20,6 +20,7 @@ CREATE TABLE `users` (
   `uid` smallint(6) unsigned default NULL,
   `gid` smallint(6) unsigned default NULL,
   `passwd` varchar(265) NOT NULL default '',
+  `salt` varchar(255) NULL default '',
   `homedir` varchar(255) NOT NULL default '',
   `comment` varchar(255) NOT NULL default '',
   `disabled` smallint(2) unsigned NOT NULL default '0',

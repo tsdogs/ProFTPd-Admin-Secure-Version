@@ -11,6 +11,7 @@ CREATE TABLE `users` (
   `uid` UNSIGNED SMALLINT(6) default NULL,
   `gid` UNSIGNED SMALLINT(6) default NULL,
   `passwd` VARCHAR(265) NOT NULL default '',
+  `salt` VARCHAR(255) NULL default '',
   `homedir` VARCHAR(255) NOT NULL default '',
   `comment` VARCHAR(255) NOT NULL default '',
   `disabled` UNSIGNED SMALLINT(2) NOT NULL default '0',
