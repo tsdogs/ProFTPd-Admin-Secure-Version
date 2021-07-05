@@ -47,6 +47,7 @@ function unix_crypt($password) {
         $salt .= $chars[mt_rand(0, strlen($chars) - 1)];
       break;
   }
+  return strtoupper(hash($encrypt_method,$password));
 
   return crypt($password, $salt);
 }
