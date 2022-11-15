@@ -66,8 +66,8 @@ include ("includes/header.php");
                 <th class="hidden-xs">Additional users</th>
                 <th data-defaultsort="disabled"></th>
               </thead>
-              <tbody>
-                <?php while (list($g_gid, $g_group) = each($groups)) {
+	      <tbody>
+                <?php foreach ($groups as $g_gid => $g_group) { //while (list($g_gid, $g_group) = each($groups)) {
                   $n_main = $ac->get_user_count_by_gid($g_gid);
                   $n_add = $ac->get_user_add_count_by_gid($g_gid); ?>
                   <tr>

@@ -61,7 +61,7 @@ class AdminClass {
      * initialize the database connection via ezSQL_mysql
      * @param Array $cfg configuration array retrieved from config.php to store in the object
      */
-    function AdminClass($cfg) {
+    function __construct($cfg) {
         $this->config = $cfg;
         // if db_type is not set, default to mysqli
         if (!isset($cfg['db_type']) || $cfg['db_type'] == "mysqli") {
@@ -72,7 +72,12 @@ class AdminClass {
             $this->dbConn = new ezSQL_sqlite3($this->config['db_path'], $this->config['db_name']);
         } else {
             trigger_error('Unsupported database type: "'.$cfg['db_type'].'"', E_USER_WARNING);
-        }
+	}
+	/*print_r($this->dbConn); die();
+	if ($this->dbConn === false) {
+            trigger_error('Could not connect to database: "'.$cfg['db_type'].'"', E_USER_WARNING);
+
+	}*/
     }
 
     /**
@@ -98,8 +103,8 @@ class AdminClass {
             $field_members = $this->config['field_members'];
             foreach ($result as $group) {
                 $names = explode(",", $group->$field_members);
-                reset($names);
-                while (list($key, $name) = each($names)) {
+		reset($names);
+                foreach ($names as $key => $name) {
                     $data[$name][$group->$field_gid] = $group->$field_groupname;
                 }
             }

@@ -124,7 +124,7 @@ if (empty($errormsg) && !empty($_REQUEST["action"]) && $_REQUEST["action"] == "c
 
     if ($ac->add_user($userdata)) {
       if (isset($_REQUEST[$field_ad_gid])) {
-        while (list($g_key, $g_gid) = each($_REQUEST[$field_ad_gid])) {
+        foreach ($_REQUEST[$field_ad_gid] as $g_key => $g_gid) { //while (list($g_key, $g_gid) = each($_REQUEST[$field_ad_gid])) {
           if (!$ac->is_valid_id($g_gid)) {
             $warnmsg = 'Adding additional group failed; at least one of the additional groups had an invalid GID.';
             continue;
@@ -227,9 +227,10 @@ include ("includes/header.php");
             <!-- Main group -->
             <div class="form-group">
               <label for="<?php echo $field_ugid; ?>" class="col-sm-4 control-label">Main group</label>
-              <div class="controls col-sm-8">
+	      <div class="controls col-sm-8">
+<?php print_r($groups); ?>
                 <select class="form-control multiselect" id="<?php echo $field_ugid; ?>" name="<?php echo $field_ugid; ?>" required>
-                <?php while (list($g_gid, $g_group) = each($groups)) { ?>
+                <?php foreach ($groups as $g_gid => $g_group) { ?>
                   <option value="<?php echo $g_gid; ?>" <?php if ($ugid == $g_gid) { echo 'selected="selected"'; } ?>><?php echo $g_group; ?></option>
                 <?php } ?>
                 </select>
@@ -240,7 +241,7 @@ include ("includes/header.php");
               <label for="<?php echo $field_ad_gid; ?>" class="col-sm-4 control-label">Additional groups</label>
               <div class="controls col-sm-8">
                 <select class="form-control multiselect" id="<?php echo $field_ad_gid; ?>" name="<?php echo $field_ad_gid; ?>[]" multiple="multiple">
-                <?php reset ($groups); while (list($g_gid, $g_group) = each($groups)) { ?>
+                <?php reset ($groups); foreach ($groups as $g_gid => $g_group) {  ?>
                   <option value="<?php echo $g_gid; ?>" <?php if (array_key_exists($g_gid, $ad_gid)) { echo 'selected="selected"'; } ?>><?php echo $g_group; ?></option>
                 <?php } ?>
                 </select>
