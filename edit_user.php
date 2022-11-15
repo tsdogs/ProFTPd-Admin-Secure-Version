@@ -332,7 +332,7 @@ include ("includes/header.php");
             <div class="controls col-sm-8">
               <select class="form-control multiselect" id="<?php echo $field_ad_gid; ?>" name="<?php echo $field_ad_gid; ?>[]" multiple="multiple">
 	      <?php reset ($groups); foreach ($groups as $g_gid => $g_group) { ?>
-                <option value="<?php echo $g_gid; ?>" <?php if (array_key_exists($g_gid, $ad_gid)) { echo 'selected="selected"'; } ?>><?php echo $g_group; ?></option>
+                <option value="<?php echo $g_gid; ?>" <?php if (is_array($ad_gid) && array_key_exists($g_gid, $ad_gid)) { echo 'selected="selected"'; } ?>><?php echo $g_group; ?></option>
               <?php } ?>
               </select>
             </div>
